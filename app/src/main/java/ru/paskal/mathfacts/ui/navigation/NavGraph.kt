@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.paskal.mathfacts.ui.views.CoordsScreen
 import ru.paskal.mathfacts.ui.views.DateScreen
+import ru.paskal.mathfacts.ui.views.MapScreen
 import ru.paskal.mathfacts.ui.views.MathScreen
 import ru.paskal.mathfacts.ui.views.RegularScreen
 
@@ -23,7 +24,7 @@ fun NavGraph(
         Modifier.padding(padding)
     ) {
         composable(Routes.CoordsScreenRoute) {
-            CoordsScreen()
+            CoordsScreen(navHostController = navHostController)
         }
         composable(Routes.DateScreenRoute) {
             DateScreen()
@@ -33,6 +34,9 @@ fun NavGraph(
         }
         composable(Routes.MathScreenRoute) {
             MathScreen()
+        }
+        composable(Routes.MapScreenRoute) {
+            MapScreen(navHostController = navHostController)
         }
     }
 }

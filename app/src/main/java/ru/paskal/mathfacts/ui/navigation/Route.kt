@@ -8,7 +8,7 @@ object Routes {
 
     const val MapScreenRoute = "map_screen"
 
-    const val CardScreenRouteArgument = "cardId"
-    const val CardScreenRoute = "card_screen"
-    const val CardScreenRouteGraph = "${CardScreenRoute}/{${CardScreenRouteArgument}}"
+//    const val CardScreenRouteArgument = "cardId"
+//    const val CardScreenRoute = "card_screen"
+//    const val CardScreenRouteGraph = "${CardScreenRoute}/{${CardScreenRouteArgument}}"
 }

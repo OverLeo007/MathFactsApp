@@ -1,5 +1,6 @@
 package ru.paskal.mathfacts.ui.components
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,7 @@ fun CardImpl(text: String, buttonOnClick: () -> Unit) {
     }
 
     LaunchedEffect(rating.intValue) {
-        Toast.makeText(context, "stars: ${rating.intValue}", Toast.LENGTH_SHORT).show()
+        Log.d("stars", "stars: ${rating.intValue}")
     }
 
     Card(

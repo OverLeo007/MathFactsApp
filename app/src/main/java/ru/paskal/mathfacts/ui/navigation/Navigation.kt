@@ -41,7 +41,15 @@ fun Navigation(
                 selected = currentRoute == item.route,
                 onClick = {
                     isSelected.value = true
-                    navController.navigate(item.route) {}
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = false
+                        }
+
+                        launchSingleTop = true
+
+                        restoreState = true
+                    }
                 },
                 icon = {
                     Icon(painter = painterResource(item.iconId), contentDescription = "Icon")

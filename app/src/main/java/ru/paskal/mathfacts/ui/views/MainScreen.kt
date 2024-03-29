@@ -47,7 +47,8 @@ fun MainScreen() {
         Routes.DateScreenRoute -> "Факты по дате"
         Routes.RegularScreenRoute -> "Обычные факты"
         Routes.MathScreenRoute -> "Математические факты"
-        else -> "Test"
+        Routes.MapScreenRoute -> "Карта"
+        else -> ""
     }
     Scaffold(
         topBar = {
