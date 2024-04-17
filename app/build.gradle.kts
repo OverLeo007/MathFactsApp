@@ -51,6 +51,7 @@ android {
 
 dependencies {
 //    implementation(libs.compose.ratingbar.library)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
     implementation("com.github.MhmoudAlim:Compose-Ratingbar-library:0.1.0")
     implementation("me.saket.cascade:cascade-compose:2.3.0")
     implementation(libs.androidx.navigation.fragment.ktx)

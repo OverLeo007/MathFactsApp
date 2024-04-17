@@ -59,6 +59,7 @@ fun Navigation(
                     selectedTextColor = Color.White,
                     unselectedIconColor = Color.White,
                     unselectedTextColor = Color.White,
+                    indicatorColor = Color.Gray
                 ),
                 alwaysShowLabel = false
             )
