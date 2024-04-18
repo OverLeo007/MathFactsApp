@@ -1,21 +1,19 @@
 package ru.paskal.mathfacts.ui.components
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,15 +24,14 @@ import ru.paskal.mathfacts.utils.getColor
 
 
 @Composable
-fun CardImpl(text: String, buttonOnClick: () -> Unit) {
-    val context = LocalContext.current
-    val rating = remember {
-        mutableIntStateOf(4)
+fun CardImpl(
+    text: String,
+    buttonOnClick: () -> Unit,
+    isLoading: Boolean = false,
+    rating: MutableState<Int> = remember {
+        mutableIntStateOf(0)
     }
-
-    LaunchedEffect(rating.intValue) {
-        Log.d("stars", "stars: ${rating.intValue}")
-    }
+) {
 
     Card(
         colors = CardDefaults.cardColors(
@@ -53,25 +50,30 @@ fun CardImpl(text: String, buttonOnClick: () -> Unit) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = text,
-                    lineHeight = 15.sp,
-                    style = AppTypography.bodySmall
-                )
-                RatingBarView(
-                    rating = rating,
-                    isRatingEditable = true,
-                    isViewAnimated = false,
-                    starIcon = painterResource(id = R.drawable.star_border),
-                    starsPadding = 16.dp,
-                )
-                ButtonImpl(
-                    text = "Сохранить",
-                    widthFraction = 0.8F,
-                    onClickAction = buttonOnClick
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = getColor(id = R.color.black)
+                    )
+                } else {
+                    Text(
+                        text = text,
+                        lineHeight = 15.sp,
+                        style = AppTypography.bodySmall
+                    )
+                    RatingBarView(
+                        rating = rating,
+                        isRatingEditable = true,
+                        isViewAnimated = false,
+                        starIcon = painterResource(id = R.drawable.star_border),
+                        starsPadding = 16.dp,
+                    )
+                    ButtonImpl(
+                        text = "Сохранить",
+                        widthFraction = 0.8F,
+                        onClickAction = buttonOnClick
+                    )
+                }
             }
-
         }
     }
 }

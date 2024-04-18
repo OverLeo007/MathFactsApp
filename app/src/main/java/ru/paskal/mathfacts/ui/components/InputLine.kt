@@ -21,7 +21,7 @@ fun InputLine(
     icon:  @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions? = null,
     @FloatRange(from = 0.0, to = 1.0) widthFraction: Float = 1f,
-    label: @Composable (() -> Unit)? = null
+    label: @Composable (() -> Unit)? = null,
 ) {
     TextField(
         label = label,
@@ -38,6 +38,6 @@ fun InputLine(
         ),
         keyboardOptions = if (keyboardOptions == null) { KeyboardOptions.Default} else {
             KeyboardOptions(keyboardType = KeyboardType.Decimal)
-        }
+        },
     )
 }

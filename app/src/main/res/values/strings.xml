@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Math Facts</string>
+    <string name="base_url">http://numbersapi.com/</string>
 </resources>

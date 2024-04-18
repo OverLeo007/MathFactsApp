@@ -8,9 +8,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.paskal.mathfacts.R
@@ -23,7 +20,7 @@ fun ButtonImpl(
     onClickAction: () -> Unit,
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 1.0) widthFraction: Float = 1f,
-    enabled: MutableState<Boolean> = remember { mutableStateOf(true)}
+    enabled: Boolean = true
     ) {
     Button(
         modifier = modifier
@@ -38,7 +35,7 @@ fun ButtonImpl(
             defaultElevation = 4.dp,
             pressedElevation = 0.dp
         ),
-        enabled = enabled.value
+        enabled = enabled
     ) {
         Text(
             text = text,

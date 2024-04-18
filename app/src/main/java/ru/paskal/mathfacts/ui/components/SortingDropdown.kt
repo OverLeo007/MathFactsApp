@@ -1,6 +1,5 @@
 package ru.paskal.mathfacts.ui.components
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -20,21 +19,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ru.paskal.mathfacts.R
+import ru.paskal.mathfacts.utils.DropdownElements
 import ru.paskal.mathfacts.utils.getColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SortingDropdown() {
-    val context = LocalContext.current
-    val variants = arrayOf("5 -> 1", "1 -> 5", "В порядке добавления")
-    val starVariants = arrayOf("5 -> 1", "1 -> 5")
+fun SortingDropdown(
+    onElementPicked: (String) -> Unit = {}
+) {
+    val variants = arrayOf(
+        DropdownElements.ToLower,
+        DropdownElements.ToHigher,
+        DropdownElements.ToAddOrder
+    )
+    val starVariants = arrayOf(DropdownElements.ToHigher, DropdownElements.ToLower)
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(variants[0]) }
+    var selectedText by remember { mutableStateOf(DropdownElements.Default) }
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = {
@@ -90,7 +94,7 @@ fun SortingDropdown() {
                     onClick = {
                         selectedText = item
                         expanded = false
-                        Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                        onElementPicked(selectedText)
                     },
                     leadingIcon = {
                         var icon = R.drawable.arrow_down

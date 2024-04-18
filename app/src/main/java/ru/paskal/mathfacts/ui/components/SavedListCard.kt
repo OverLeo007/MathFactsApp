@@ -1,6 +1,5 @@
 package ru.paskal.mathfacts.ui.components
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,11 +7,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -36,7 +35,13 @@ import ru.paskal.mathfacts.ui.theme.AppTypography
 import ru.paskal.mathfacts.utils.getColor
 
 @Composable
-fun SavedListCard(fact: String) {
+fun SavedListCard(
+    fact: String = "",
+    facts: List<MathFact> = listOf(),
+    onSelectItemInDropdown: (String) -> Unit = {},
+    onDeleteFact: (MathFact) -> Unit = {},
+    onSaveFact: (MathFact) -> Unit = {}
+) {
     /* TODO Сделать точку входа для событий элемента и его наполнения */
 
     val context = LocalContext.current
@@ -50,20 +55,21 @@ fun SavedListCard(fact: String) {
     val modalId = remember {
         mutableIntStateOf(0)
     }
+
+    val modalFact = remember {
+        mutableStateOf(MathFact(factText = ""))
+    }
     when {
         openModal.value -> {
             FactModal(
                 onSaveRequest = {
                     openModal.value = false
-                    Toast
-                        .makeText(context, "Save ${modalId.intValue} from modal", Toast.LENGTH_SHORT)
-                        .show()
+                    modalFact.value.rating = modalRating.intValue
+                    onSaveFact(modalFact.value)
                 },
                 onDeleteRequest = {
                     openModal.value = false
-                    Toast
-                        .makeText(context, "Delete ${modalId.intValue} from modal", Toast.LENGTH_SHORT)
-                        .show()
+                    onDeleteFact(modalFact.value)
                 },
                 onDismissRequest = {
                     openModal.value = false
@@ -75,36 +81,31 @@ fun SavedListCard(fact: String) {
         }
     }
     Card(
-        modifier = Modifier.height(500.dp),
+        modifier = Modifier.heightIn(max = 500.dp),
         colors = CardDefaults.cardColors(
             containerColor = getColor(id = R.color.card_bga)
         )
     ) {
         Column {
-            SortingDropdown()
+            SortingDropdown { selected ->
+                onSelectItemInDropdown(selected)
+            }
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(10.dp),
             ) {
-                items(56) {
-                    val fact = MathFact(
-                        rating = 4,
-                        factText = "Fact $it: $fact",
-                    )
+                items(facts) { fact ->
                     ListElement(
-                        index = it,
                         fact = fact,
                         onClick = {
                             openModal.value = true
                             modalRating.intValue = fact.rating
                             modalText.value = fact.factText
-                            modalId.intValue = it
-                            Toast
-                                .makeText(context, "Открыт факт $it", Toast.LENGTH_SHORT)
-                                .show()
+                            modalId.intValue = fact.id
+                            modalFact.value = fact
                         },
                         onDeleteClick = {
-                            Toast.makeText(context, "Удаление $it", Toast.LENGTH_SHORT).show()
+                            onDeleteFact(fact)
                         },
                     )
                 }
@@ -115,7 +116,7 @@ fun SavedListCard(fact: String) {
 
 
 @Composable
-fun ListElement(index: Int, fact: MathFact, onClick: () -> Unit, onDeleteClick: () -> Unit) {
+fun ListElement(fact: MathFact, onClick: () -> Unit, onDeleteClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

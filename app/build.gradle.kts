@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-kapt")
 }
 
 android {
@@ -51,7 +52,11 @@ android {
 
 dependencies {
 //    implementation(libs.compose.ratingbar.library)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("com.github.MhmoudAlim:Compose-Ratingbar-library:0.1.0")
     implementation("me.saket.cascade:cascade-compose:2.3.0")
     implementation(libs.androidx.navigation.fragment.ktx)

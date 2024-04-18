@@ -43,9 +43,6 @@ fun CoordsScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     var cordX by remember { mutableStateOf(Random.nextInt(1..99).toString()) }
     var cordY by remember { mutableStateOf(Random.nextInt(1..99).toString()) }
-    val isGenButtonEnabled = remember {
-        mutableStateOf(true)
-    }
 
     MainColumn {
         val titleModifier = Modifier.align(Alignment.Start)
@@ -74,7 +71,6 @@ fun CoordsScreen(navHostController: NavHostController) {
                     onClickAction = {
                         Toast.makeText(context, "Генерация факта по X", Toast.LENGTH_SHORT).show()
                     },
-                    enabled = isGenButtonEnabled
                 )
             }
             Spacer(modifier = Modifier.weight(0.2F))
@@ -94,7 +90,6 @@ fun CoordsScreen(navHostController: NavHostController) {
                     onClickAction = {
                         Toast.makeText(context, "Генерация факта по Y", Toast.LENGTH_SHORT).show()
                     },
-                    enabled = isGenButtonEnabled
                 )
             }
         }
@@ -119,7 +114,7 @@ fun CoordsScreen(navHostController: NavHostController) {
                     "closed binary operations on a set with 3 elements.",
             buttonOnClick = {
                 Toast.makeText(context, "Сохранение факта", Toast.LENGTH_SHORT).show()
-            }
+            },
         )
         // <--------------------------------------------------------------------------------------->
         Spacer(modifier = Modifier.padding(vertical = 8.dp))

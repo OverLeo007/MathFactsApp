@@ -68,7 +68,6 @@ fun RegularScreen() {
                 Toast.makeText(context, "Генерация факта", Toast.LENGTH_SHORT).show()
             },
             widthFraction = 0.7F,
-            enabled = isGenButtonEnabled
         )
         // <--------------------------------------------------------------------------------------->
         Spacer(modifier = Modifier.padding(vertical = 8.dp))

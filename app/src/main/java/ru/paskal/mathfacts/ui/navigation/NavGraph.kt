@@ -20,7 +20,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Routes.CoordsScreenRoute,
+        startDestination = Routes.DateScreenRoute,
         Modifier.padding(padding)
     ) {
         composable(Routes.CoordsScreenRoute) {
