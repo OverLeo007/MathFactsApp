@@ -16,13 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.paskal.mathfacts.R
 import ru.paskal.mathfacts.ui.navigation.NavGraph
 import ru.paskal.mathfacts.ui.navigation.Navigation
 import ru.paskal.mathfacts.ui.navigation.Routes
+import ru.paskal.mathfacts.utils.FactTypes
 import ru.paskal.mathfacts.utils.getColor
+import ru.paskal.mathfacts.viewmodel.FactsViewModel
+import ru.paskal.mathfacts.viewmodel.FactsVmFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +44,14 @@ fun MainScreen() {
         Routes.MapScreenRoute -> "Карта"
         else -> ""
     }
+
+    val vms: HashMap<String, FactsViewModel> = HashMap()
+    vms[FactTypes.Date] = viewModel(key = FactTypes.Date, factory = FactsVmFactory(FactTypes.Date))
+    vms[FactTypes.Trivia] = viewModel(key = FactTypes.Trivia, factory = FactsVmFactory(FactTypes.Trivia))
+    vms[FactTypes.Math] = viewModel(key = FactTypes.Math, factory = FactsVmFactory(FactTypes.Math))
+
+    Log.d("VMS", vms.toString())
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -68,6 +80,6 @@ fun MainScreen() {
         containerColor = getColor(id = R.color.bga)
     ) {
         Log.d("nav p", it.toString())
-        NavGraph(navHostController = navController, padding = it)
+        NavGraph(navHostController = navController, padding = it, vms = vms)
     }
 }

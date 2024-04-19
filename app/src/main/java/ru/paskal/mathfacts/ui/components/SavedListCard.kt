@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -44,7 +43,6 @@ fun SavedListCard(
 ) {
     /* TODO Сделать точку входа для событий элемента и его наполнения */
 
-    val context = LocalContext.current
     val openModal = remember { mutableStateOf(false) }
     val modalRating = remember {
         mutableIntStateOf(0)

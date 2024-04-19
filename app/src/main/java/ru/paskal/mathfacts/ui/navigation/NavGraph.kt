@@ -12,28 +12,31 @@ import ru.paskal.mathfacts.ui.views.DateScreen
 import ru.paskal.mathfacts.ui.views.MapScreen
 import ru.paskal.mathfacts.ui.views.MathScreen
 import ru.paskal.mathfacts.ui.views.RegularScreen
+import ru.paskal.mathfacts.utils.FactTypes
+import ru.paskal.mathfacts.viewmodel.FactsViewModel
 
 @Composable
 fun NavGraph(
     navHostController: NavHostController,
-    padding: PaddingValues
+    padding: PaddingValues,
+    vms: HashMap<String, FactsViewModel>
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Routes.DateScreenRoute,
+        startDestination = Routes.MathScreenRoute,
         Modifier.padding(padding)
     ) {
         composable(Routes.CoordsScreenRoute) {
             CoordsScreen(navHostController = navHostController)
         }
         composable(Routes.DateScreenRoute) {
-            DateScreen()
+            DateScreen(vm = vms[FactTypes.Date]!!)
         }
         composable(Routes.RegularScreenRoute) {
-            RegularScreen()
+            RegularScreen(vm = vms[FactTypes.Trivia]!!)
         }
         composable(Routes.MathScreenRoute) {
-            MathScreen()
+            MathScreen(vm = vms[FactTypes.Math]!!)
         }
         composable(Routes.MapScreenRoute) {
             MapScreen(navHostController = navHostController)

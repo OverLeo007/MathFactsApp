@@ -2,6 +2,7 @@ package ru.paskal.mathfacts.ui.components
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -18,10 +19,11 @@ fun InputLine(
     readOnly: Boolean,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    icon:  @Composable (() -> Unit)? = null,
+    icon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions? = null,
     @FloatRange(from = 0.0, to = 1.0) widthFraction: Float = 1f,
     label: @Composable (() -> Unit)? = null,
+    onKeyboardDone: () -> Unit = {}
 ) {
     TextField(
         label = label,
@@ -36,8 +38,13 @@ fun InputLine(
             focusedContainerColor = getColor(id = R.color.card_bga),
             focusedIndicatorColor = Color.Black
         ),
-        keyboardOptions = if (keyboardOptions == null) { KeyboardOptions.Default} else {
+        keyboardOptions = if (keyboardOptions == null) {
+            KeyboardOptions.Default
+        } else {
             KeyboardOptions(keyboardType = KeyboardType.Decimal)
         },
+        keyboardActions = KeyboardActions(
+            onDone = { onKeyboardDone() }
+        )
     )
 }
