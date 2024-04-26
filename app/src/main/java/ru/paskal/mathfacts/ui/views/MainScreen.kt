@@ -27,6 +27,7 @@ import ru.paskal.mathfacts.utils.FactTypes
 import ru.paskal.mathfacts.utils.getColor
 import ru.paskal.mathfacts.viewmodel.FactsViewModel
 import ru.paskal.mathfacts.viewmodel.FactsVmFactory
+import ru.paskal.mathfacts.viewmodel.MapViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,9 +47,10 @@ fun MainScreen() {
     }
 
     val vms: HashMap<String, FactsViewModel> = HashMap()
-    vms[FactTypes.Date] = viewModel(key = FactTypes.Date, factory = FactsVmFactory(FactTypes.Date))
-    vms[FactTypes.Trivia] = viewModel(key = FactTypes.Trivia, factory = FactsVmFactory(FactTypes.Trivia))
-    vms[FactTypes.Math] = viewModel(key = FactTypes.Math, factory = FactsVmFactory(FactTypes.Math))
+    vms[FactTypes.Date] = viewModel(key = FactTypes.Date, factory = FactsVmFactory(FactTypes.Date, FactsViewModel::class.java))
+    vms[FactTypes.Trivia] = viewModel(key = FactTypes.Trivia, factory = FactsVmFactory(FactTypes.Trivia, FactsViewModel::class.java))
+    vms[FactTypes.Math] = viewModel(key = FactTypes.Math, factory = FactsVmFactory(FactTypes.Math, FactsViewModel::class.java))
+    val mapVm: MapViewModel = viewModel(key = FactTypes.Map, factory = FactsVmFactory(FactTypes.Map, MapViewModel::class.java))
 
     Log.d("VMS", vms.toString())
 
@@ -80,6 +82,6 @@ fun MainScreen() {
         containerColor = getColor(id = R.color.bga)
     ) {
         Log.d("nav p", it.toString())
-        NavGraph(navHostController = navController, padding = it, vms = vms)
+        NavGraph(navHostController = navController, padding = it, vms = vms, mapVm = mapVm)
     }
 }

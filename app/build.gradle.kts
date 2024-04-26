@@ -52,6 +52,8 @@ android {
 
 dependencies {
 //    implementation(libs.compose.ratingbar.library)
+    //
+    implementation("com.google.maps.android:maps-compose:4.3.3")
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("com.squareup.retrofit2:retrofit:2.10.0")

@@ -1,7 +1,6 @@
 package ru.paskal.mathfacts.ui.views
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,47 +10,72 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import ru.paskal.mathfacts.R
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import ru.paskal.mathfacts.ui.components.ButtonImpl
 import ru.paskal.mathfacts.ui.components.InputLine
 import ru.paskal.mathfacts.ui.navigation.Routes
-import ru.paskal.mathfacts.utils.getColor
-import kotlin.random.Random
-import kotlin.random.nextInt
+import ru.paskal.mathfacts.viewmodel.MapViewModel
+import kotlin.math.roundToInt
 
 @Composable
-fun MapScreen(navHostController: NavHostController) {
+fun MapScreen(
+    navHostController: NavHostController,
+    vm: MapViewModel
+) {
+    Log.d("VM INIT MapScreen", vm.toString())
+    val cameraPositionState = rememberCameraPositionState {
+        position = vm.cameraPosition
+    }
 
-    val context = LocalContext.current
-    var cordX by remember { mutableStateOf(Random.nextInt(1..99).toString()) }
-    var cordY by remember { mutableStateOf(Random.nextInt(1..99).toString()) }
+    LaunchedEffect(cameraPositionState.position) {
+        vm.cameraPosition = cameraPositionState.position
+    }
+
+
+
     Column (
         modifier = Modifier
         .fillMaxSize()
 
     ){
-        Image(
+        GoogleMap(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.8F)
-//            .height(120.dp)
-//            .shadow(4.dp)
-//            .clip(RoundedCornerShape(16.dp))
-                .background(getColor(R.color.bga)),
-            painter = painterResource(R.drawable.map90),
-            contentDescription = "Description for accessibility",
-            contentScale = ContentScale.Crop
-        )
+                .fillMaxHeight(0.8F),
+            cameraPositionState = cameraPositionState,
+            onMapClick =  { latLng ->
+                vm.curLatLng = latLng
+                vm.markerState = MarkerState(position = latLng)
+            },
+            properties = MapProperties(mapType = MapType.SATELLITE),
+            uiSettings = MapUiSettings(
+                myLocationButtonEnabled = true,
+            )
+        ) {
+            Marker(
+                state = MarkerState(position = vm.ikitLatLng),
+                title = "Хихит",
+                snippet = "Вот тут я сдаю лабы"
+            )
+            vm.markerState?.let {
+                Marker(
+                    state = it,
+                    title = "Clicked location",
+                    snippet = "Lat: ${it.position.latitude}, Lng: ${it.position.longitude}"
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
         Column(
             modifier = Modifier.padding(horizontal = 20.dp)
@@ -64,10 +88,9 @@ fun MapScreen(navHostController: NavHostController) {
                     modifier = Modifier.weight(0.8F),
                 ) {
                     InputLine(
-                        value = cordX,
+                        value = vm.curLatLng.latitude.roundToInt().toString(),
                         readOnly = true,
                         onValueChange = {
-                            cordX = it
                         },
                         label = { Text(text = "X координата")},
                     )
@@ -77,10 +100,9 @@ fun MapScreen(navHostController: NavHostController) {
                     modifier = Modifier.weight(0.8F),
                 ) {
                     InputLine(
-                        value = cordY,
+                        value = vm.curLatLng.longitude.roundToInt().toString(),
                         readOnly = true,
                         onValueChange = {
-                            cordY = it
                         },
                         label = { Text(text = "Y координата")},
                     )

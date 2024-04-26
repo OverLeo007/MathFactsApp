@@ -1,6 +1,6 @@
 package ru.paskal.mathfacts.ui.views
 
-import android.widget.Toast
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,16 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -35,14 +33,22 @@ import ru.paskal.mathfacts.ui.components.SavedListCard
 import ru.paskal.mathfacts.ui.components.TitleText
 import ru.paskal.mathfacts.ui.navigation.Routes
 import ru.paskal.mathfacts.utils.getColor
-import kotlin.random.Random
-import kotlin.random.nextInt
+import ru.paskal.mathfacts.viewmodel.MapViewModel
+import kotlin.math.roundToInt
 
 @Composable
-fun CoordsScreen(navHostController: NavHostController) {
-    val context = LocalContext.current
-    var cordX by remember { mutableStateOf(Random.nextInt(1..99).toString()) }
-    var cordY by remember { mutableStateOf(Random.nextInt(1..99).toString()) }
+fun CoordsScreen(
+    navHostController: NavHostController,
+    vm: MapViewModel
+) {
+    Log.d("VM INIT CoordsScreen", vm.toString())
+    val rating = remember {
+        mutableIntStateOf(vm.currentFact.rating)
+    }
+
+    LaunchedEffect(rating.intValue) {
+        vm.updateRating(rating.intValue)
+    }
 
     MainColumn {
         val titleModifier = Modifier.align(Alignment.Start)
@@ -58,18 +64,15 @@ fun CoordsScreen(navHostController: NavHostController) {
                 modifier = Modifier.weight(0.8F),
             ) {
                 InputLine(
-                    value = cordX,
+                    value = vm.curLatLng.latitude.roundToInt().toString(),
                     readOnly = true,
-                    onValueChange = {
-                        cordX = it
-                    },
+                    onValueChange = {},
                     label = { Text(text = "X координата")},
                 )
                 ButtonImpl(
-
                     text = "Сгенерировать по X",
                     onClickAction = {
-                        Toast.makeText(context, "Генерация факта по X", Toast.LENGTH_SHORT).show()
+                        vm.generateAndSetFact("X")
                     },
                 )
             }
@@ -78,17 +81,15 @@ fun CoordsScreen(navHostController: NavHostController) {
                 modifier = Modifier.weight(0.8F),
             ) {
                 InputLine(
-                    value = cordY,
+                    value = vm.curLatLng.longitude.roundToInt().toString(),
                     readOnly = true,
-                    onValueChange = {
-                        cordY = it
-                    },
+                    onValueChange = {},
                     label = { Text(text = "Y координата") },
                 )
                 ButtonImpl(
                     text = "Сгенерировать по Y",
                     onClickAction = {
-                        Toast.makeText(context, "Генерация факта по Y", Toast.LENGTH_SHORT).show()
+                        vm.generateAndSetFact("Y")
                     },
                 )
             }
@@ -110,19 +111,22 @@ fun CoordsScreen(navHostController: NavHostController) {
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
         TitleText(text = "Интересный факт", modifier = titleModifier)
         CardImpl(
-            text = "3306 is the number of non-associative " +
-                    "closed binary operations on a set with 3 elements.",
-            buttonOnClick = {
-                Toast.makeText(context, "Сохранение факта", Toast.LENGTH_SHORT).show()
-            },
+            text = vm.currentFact.factText,
+            buttonOnClick = { vm.saveCurrentFact() },
+            rating = rating,
+            isLoading = vm.isLoading,
         )
         // <--------------------------------------------------------------------------------------->
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
         TitleText(text = "Сохраненные факты", modifier = titleModifier)
         // <--------------------------------------------------------------------------------------->
         Spacer(modifier = Modifier.padding(vertical = 8.dp))
-        SavedListCard("3306 is the number of non-associative " +
-                "closed binary operations on a set with 3 elements.")
+        SavedListCard(
+            facts = vm.savedFacts,
+            onSelectItemInDropdown = { vm.updateSorting(it) },
+            onDeleteFact = { vm.deleteFact(it) },
+            onSaveFact = { vm.saveFact(it) }
+        )
     }
 
 }

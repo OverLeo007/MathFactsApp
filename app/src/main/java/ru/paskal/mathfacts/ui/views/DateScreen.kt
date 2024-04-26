@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.paskal.mathfacts.R
 import ru.paskal.mathfacts.ui.components.ButtonImpl
 import ru.paskal.mathfacts.ui.components.CardImpl
@@ -21,13 +20,11 @@ import ru.paskal.mathfacts.ui.components.InputLine
 import ru.paskal.mathfacts.ui.components.MainColumn
 import ru.paskal.mathfacts.ui.components.SavedListCard
 import ru.paskal.mathfacts.ui.components.TitleText
-import ru.paskal.mathfacts.utils.FactTypes
 import ru.paskal.mathfacts.viewmodel.FactsViewModel
-import ru.paskal.mathfacts.viewmodel.FactsVmFactory
 
 @Composable
 fun DateScreen(
-    vm: FactsViewModel = viewModel(factory = FactsVmFactory(FactTypes.Date))
+    vm: FactsViewModel
 ) {
     val rating = remember {
         mutableIntStateOf(vm.currentFact.rating)
